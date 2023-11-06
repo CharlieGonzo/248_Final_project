@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import app.start;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -200,6 +201,12 @@ public class CourseSetView implements Initializable{
 				public void changed(ObservableValue<? extends Section> arg0, Section arg1, Section arg2) {
 					// TODO Auto-generated method stub
 					Section sec = assigned.getSelectionModel().getSelectedItem();
+					ObservableList<Section> items = assigned.getItems();
+
+					// Using a for-each loop to iterate through the items
+					for (Section item : items) {
+					    System.out.println(item); // Replace this with your desired logic
+					}
 					for(int i = 0;i<current.getCurrentSections().size();i++) {
 						if(current.getCurrentSections().get(i).getCRN().equals(sec.getCRN())) {
 							current.getCurrentSections().remove(i);
@@ -234,14 +241,20 @@ public class CourseSetView implements Initializable{
 						
 						}else {
 						warning1.setVisible(false);
-						 Section section = available.getSelectionModel().getSelectedItem();
-						 boolean work = true;
+						Section section = available.getSelectionModel().getSelectedItem();
+						boolean work = true;
+						 
+						
+							
+							// Using a for-each loop to iterate through the items
+							
+							
 				
 							 if (!current.getCurrentSections().isEmpty()) {
 								    for (int i = 0; i < current.getCurrentSections().size(); i++) {
 								        for (int j = 0; j < section.getTimeRange().size(); j++) {
 								            for (int k = 0; k < current.getCurrentSections().get(i).getTimeRange().size(); k++) {
-								                if (section.getTimeRange().get(j).ableTo(current.getCurrentSections().get(i).getTimeRange().get(k)) == false) {
+								                if (section.getTimeRange().get(j).ableTo(current.getCurrentSections().get(i).getTimeRange().get(k),section,assigned.getItems()) == false) {
 								                   
 								                    work = false;
 								                }
@@ -258,7 +271,7 @@ public class CourseSetView implements Initializable{
 							    while (iterator.hasNext()) {
 							        Section sec = iterator.next();
 							        if (sec.getCRN().equals(CRN)) {
-							            iterator.remove(); // Safely remove the element
+							            iterator.remove(); 
 							        }
 							    }		
 							 	current.getCurrentSections().add(section);
@@ -274,16 +287,15 @@ public class CourseSetView implements Initializable{
 						 }
 						 start.save();
 					}
-					}
-					
-				  });
-			  
+					}});
+		
 			 
 		}
+
 		
 		public void load(ActionEvent action) {
 			available.getItems().clear();
-			 ArrayList<Section> sec = new  ArrayList<>(availableSection);
+			ArrayList<Section> sec = new  ArrayList<>(availableSection);
 			available.getItems().addAll(current.isAvailableAndCampusMatch(sec));
 			
 			assigned.getItems().clear();

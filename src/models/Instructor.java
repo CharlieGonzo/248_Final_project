@@ -95,7 +95,11 @@ public class Instructor implements Comparable<Instructor>,Serializable{
 		for(int i = 0;i<s.size();i++) {
 			try {
 			if(s.get(i).substring(0,3).equals("MAT")) {
-				courseList.add(s.get(i));
+				if(s.get(i).length() == 7) {
+					courseList.add(s.get(i).substring(0,s.get(i).length()-1));
+				}else {
+					courseList.add(s.get(i));
+				}
 			}
 			}catch(Exception e) {
 				
@@ -409,8 +413,6 @@ public class Instructor implements Comparable<Instructor>,Serializable{
 	public ArrayList<Section> isAvailableAndCampusMatch(ArrayList<Section> sections) {
 	    // Check if time ranges overlap
 		ArrayList<Section> newList = new ArrayList<>();
-		System.out.println(this.getAfternoonDays());
-		System.out.println(availabilitySlot.toString());
 		for(int i = 0;i<availabilitySlot.size();i++) {
 			TimeRange time = availabilitySlot.get(i);
 			
@@ -420,12 +422,37 @@ public class Instructor implements Comparable<Instructor>,Serializable{
 	        	 // Check if one of the campus variables matches
 	        
 	    	if(time.overlapsWith(section.getTimeRange().get(k),availabilitySlot)) {
-	    		
+	    		boolean avail = false;
+	    		for(String course:courseList) {
+	    			System.out.println(course + " || "  +"MAT" + section.getCourseNumber());
+	    			String s = "";
+	    			if(section.getCourseNumber().equals("1")) {
+	    				s = "001";
+	    			}
+	    			if(section.getCourseNumber().equals("9")) {
+	    				s = "009";
+	    			}
+	    			if(s.isEmpty()) {
+	    				if(course.equals("MAT"+section.getCourseNumber())) {
+	    				
+	    					avail = true;
+	    				}
+	    					
+	    			}else {
+	    				if(course.equals("MAT"+s)) {
+	    					
+	    					avail = true;
+	    				}
+	    			}
+	    			
+	    		}
 	                boolean campusMatch = (section.isAmmerman() &&	ammerman == true) ||
 	                                     (section.isGrant() && grant) ||
 	                                     (section.isRiverhead() && riverhead);
-	                if (campusMatch) {
+	                if (campusMatch && avail) {
 	                    newList.add(section);
+	                }else {
+	                	
 	                }
 	    }
 	         }

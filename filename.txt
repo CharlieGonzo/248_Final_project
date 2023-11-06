@@ -1,0 +1,1 @@
+Instructor [id=00000001, firstName=Gusack, lastName=Russel, campus=O O O O, secondCourse=false, sat=false, homeCampus=null, sun=false, city=null, stateAndZip=null, dateStarted=null, Thirdcourse=false]

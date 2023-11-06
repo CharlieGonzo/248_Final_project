@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import models.Instructor;
 import models.InstructorBag;
 import models.SectionBag;
 
@@ -77,6 +78,7 @@ public class start extends Application {
 		//stage.setResizable(false);
 		stage.show();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			
 			save();
 		}));
 	}
@@ -98,27 +100,39 @@ public class start extends Application {
 	 public static void save() {
 		 try {
 			 String fileName = "Instructor.dat";
-             // Create a FileOutputStream
+           
              FileOutputStream fileOutputStream = new FileOutputStream(fileName);
 
-             // Create an ObjectOutputStream
+         
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
              
              FileOutputStream fileOutputStreamsec = new FileOutputStream("Section.dat");
 
-             // Create an ObjectOutputStream
+           
              ObjectOutputStream objectOutputStreamsec = new ObjectOutputStream(fileOutputStreamsec);
-             // Write the object to the .dat file
+             
              objectOutputStream.writeObject(InstructorBag.Start());
              objectOutputStreamsec.writeObject(SectionBag.Start());
 
-             // Close the streams
              objectOutputStream.close();
              fileOutputStream.close();
              objectOutputStreamsec.close();
              fileOutputStreamsec.close();
 
              System.out.println("Object has been saved to " + fileName);
+             File file = new File("result.txt");
+        		 file.delete();
+        		 file.createNewFile();
+        		 
+        		 for(Instructor inst:InstructorBag.Start().getInstructorList()) {
+       			  FileWriter myWriter = new FileWriter("result.txt",true);
+       			  if(inst.getCurrentSections().toString().length()>5) {
+       			  myWriter.write(inst.getId() + " " + inst.getCurrentSections().toString() + "\n");
+       		      myWriter.close();
+       			  }
+        		 }
+        	 
+            
          } catch (IOException e) {
              e.printStackTrace();
          }
